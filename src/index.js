@@ -67,14 +67,14 @@ function decode(expr) {
     return morsecodeReturn;
 }
 
-let str = '829b4b8c';
-let result = "11111110101010111111111111111000111010101010101011001110101011111110100011101110";
+// let str = '829b4b8c';
+// let result = "11111110101010111111111111111000111010101010101011001110101011111110100011101110";
 
-console.log(decode(str));
+// console.log(decode(str));
 
-if (decode(str) === result) {
-    console.log('success');
-}  else console.log('fuck');
+// if (decode(str) === result) {
+//     console.log('success');
+// }  else console.log('fuck');
 
 module.exports = {
     decode

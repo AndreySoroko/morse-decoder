@@ -37,44 +37,60 @@ const MORSE_TABLE = {
     '-----':  '0',
 };
 
-function decode(expr) {
-    let morsecode = '';
-    let morsecodeReturn ='';
-    
-        for (let char of expr){
-            if (char === ' '){
-                morsecodeReturn += '**********';
-            } else {
-                Object.keys(MORSE_TABLE).forEach(key => {
-                    let morsecodeBin = '0000000000';
-                    let value = MORSE_TABLE[key];
-                
-                    if (value === char) {
-                        // console.log(`${key}: ${value}`);
-                        morsecode += key;
-                        
-                        for (let k of key) {
-                            if(k == '.') morsecodeBin += 10;
-                            if(k == '-') morsecodeBin += 11;
-                            morsecodeBin = morsecodeBin.slice(2);
-                        }
-                        // console.log(morsecodeBin);
-                        morsecodeReturn += morsecodeBin;
-                    } 
-                });
-            }
+function getChar (binWord) { //morseWord === one alphabet character
+    binWord = checkBinWordLength(binWord);
+    let morseWord = ''; 
+    for (let i = 0; i < binWord.length; i += 2){
+        let binDigitPair = `${binWord[i]}${binWord[i + 1]}`;
+        let morseSymbol = '';
+        switch (binDigitPair) {
+            case '00': morseSymbol = '';
+            break;
+            case '10': morseSymbol = '.';
+            break;
+            case '11': morseSymbol = '-';
+            break;
+            case '**': morseSymbol = '*';
+            break;
+            default : morseSymbol = 'ERROR';
+            break;
         }
-    return morsecodeReturn;
+        morseWord += morseSymbol;
+    }
+    if (morseWord === '*****') {
+        return (' ');
+    } else {
+        return getAlphabetCharacter(morseWord);
+    }
+} // function getChar returns one alphabetic character
+
+function getAlphabetCharacter (wordMorse) {
+    let alphaChar;
+            Object.keys(MORSE_TABLE).forEach(key => {
+                let value = MORSE_TABLE[key];
+                if (key === wordMorse) alphaChar = value;
+            });
+    return alphaChar;
 }
 
-// let str = '829b4b8c';
-// let result = "11111110101010111111111111111000111010101010101011001110101011111110100011101110";
+function checkBinWordLength (binWord) {
+    if (binWord.length < 10) {
+        let str = '';
+            for (let i = 0; i < 10 - binWord.length; i++) {
+                str += '0'; 
+            }
+        return(str + binWord);
+    } else return binWord;
+}
 
-// console.log(decode(str));
+function decode(expr) {
+    let decodedStr = '';
+        for (let i = 0; i < expr.length; i += 10){
+            decodedStr += (getChar(expr.slice(i, i + 10)));
+        }
+    return decodedStr;
+}
 
-// if (decode(str) === result) {
-//     console.log('success');
-// }  else console.log('fuck');
 
 module.exports = {
     decode
